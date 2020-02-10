@@ -32,14 +32,14 @@
                 android:text="Find people, share photoss, u can change ur username anytime" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnChange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
                 android:text="Change Username" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnNext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 

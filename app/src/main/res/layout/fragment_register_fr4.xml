@@ -32,14 +32,14 @@
                 android:text="ADD a profile photo for ur frinds" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnAdd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
                 android:text="ADD a photo" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btnSkip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 

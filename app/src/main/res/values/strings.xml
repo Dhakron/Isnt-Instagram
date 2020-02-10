@@ -9,4 +9,13 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_user">User</string>
     <string name="title_search">Search</string>
+    <string name="btn_next">Next</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_rePassword">Repeat password</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="btn_register">Register</string>
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_password">Enter valid password</string>
+    <string name="err_msg_rePassword">Passwords dont match</string>
 </resources>

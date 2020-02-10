@@ -1,42 +1,21 @@
 package net.abrudan.isntinstagram.views.login.registerFR
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.fragment_register_fr1.*
 import net.abrudan.isntinstagram.R
+import net.abrudan.isntinstagram.util.validateEmail
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [RegisterFR1.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [RegisterFR1.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RegisterFR1 : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private val auth= FirebaseAuth.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,58 +24,43 @@ class RegisterFR1 : Fragment() {
         return inflater.inflate(R.layout.fragment_register_fr1, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+    override fun onStart() {
+        super.onStart()
+        btnNext.isEnabled=false
+        email_field.doOnTextChanged{text, _, _, _ ->
+            btnNext.isEnabled = validateEmail(text.toString(),textInputLayout,btnNext,this.context!!)
         }
+        btnNext.setOnClickListener{onClickNext(email_field.text.toString())}
     }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RegisterFR1.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RegisterFR1().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun onClickNext(email:String){
+        //fields
+        email_field.isEnabled=false
+        //btns
+        btnNext.isEnabled=false
+        btnNext.text=""
+        Glide.with(this).load(R.drawable.load).into(ivLoad)
+        ivLoad.forceHasOverlappingRendering(true)
+        auth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener{ task ->
+                if (task.result!!.signInMethods!!.isEmpty()) {
+                    val bundle = Bundle()
+                    bundle.putString("ARG_Email",email_field.text.toString())
+                    var transaction= parentFragmentManager.beginTransaction()
+                    val newFragment= RegisterFR2()
+                    newFragment.arguments=bundle
+                    transaction.replace(R.id.LogInFR, newFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                } else {
+                    Toast.makeText(context,"Este correo ya esta en uso", Toast.LENGTH_SHORT).show()
+                    //fields
+                    email_field.isEnabled=true
+                    //btns
+                    btnNext.text=getString(R.string.btn_next)
+                    Glide.with(this).clear(ivLoad)
                 }
             }
     }
+
 }
+
