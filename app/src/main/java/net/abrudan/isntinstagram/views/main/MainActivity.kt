@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import net.abrudan.isntinstagram.R
+import net.abrudan.isntinstagram.views.camera.CameraActivity
 import net.abrudan.isntinstagram.views.login.LogInActivity
 
 class MainActivity : AppCompatActivity() {
@@ -36,5 +37,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LogInActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
+        btnPrueba.setOnClickListener{
+            val intent = Intent(this, CameraActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }

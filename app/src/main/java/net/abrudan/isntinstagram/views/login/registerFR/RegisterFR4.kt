@@ -1,6 +1,7 @@
 package net.abrudan.isntinstagram.views.login.registerFR
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_fr4.*
 
 import net.abrudan.isntinstagram.R
+import net.abrudan.isntinstagram.views.camera.CameraActivity
+import net.abrudan.isntinstagram.views.login.LogInActivity
 
 class RegisterFR4 : Fragment() {
 
@@ -23,7 +26,11 @@ class RegisterFR4 : Fragment() {
     override fun onStart() {
         super.onStart()
         btnSkip.setOnClickListener{}
-        btnAdd.setOnClickListener{}
+        btnAdd.setOnClickListener{openCamera()}
+    }
+    fun openCamera(){
+        val intent = Intent(context, CameraActivity::class.java)
+        startActivity(intent)
     }
 
 }
