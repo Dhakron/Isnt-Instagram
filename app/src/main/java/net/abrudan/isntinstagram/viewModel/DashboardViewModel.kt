@@ -1,13 +1,13 @@
-package net.abrudan.isntinstagram.views.main.ui.user
+package net.abrudan.isntinstagram.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class UserViewModel : ViewModel() {
+class DashboardViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is user Fragment"
+        value = "This is dashboard Fragment"
     }
     val text: LiveData<String> = _text
 }

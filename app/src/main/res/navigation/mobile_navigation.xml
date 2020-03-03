@@ -7,29 +7,57 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="net.abrudan.isntinstagram.views.main.ui.home.HomeFragment"
+        android:name="net.abrudan.isntinstagram.views.main.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="net.abrudan.isntinstagram.views.main.ui.dashboard.DashboardFragment"
+        android:name="net.abrudan.isntinstagram.views.main.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="net.abrudan.isntinstagram.views.main.ui.notifications.NotificationsFragment"
+        android:name="net.abrudan.isntinstagram.views.main.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_user"
-        android:name="net.abrudan.isntinstagram.views.main.ui.user.UserFragment"
-        android:label="@string/title_user"
-        tools:layout="@layout/fragment_user" />
+        android:name="net.abrudan.isntinstagram.views.main.user.MyUserFragment"
+        android:label="@string/title_user">
+        <action
+            android:id="@+id/action_navigation_user_to_followsFragment"
+            app:destination="@id/followsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_search"
-        android:name="net.abrudan.isntinstagram.views.main.ui.search.SearchFragment"
+        android:name="net.abrudan.isntinstagram.views.main.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/followsFragment"
+        android:name="net.abrudan.isntinstagram.views.main.FollowsFragment"
+        android:label="fragment_follows"
+        tools:layout="@layout/fragment_follows" >
+        <argument
+            android:name="followers"
+            app:argType="boolean"
+            android:defaultValue="true" />
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="net.abrudan.isntinstagram.views.main.user.UserFragment"
+        android:label="UserFragment" >
+        <action
+            android:id="@+id/action_userFragment_to_followsFragment2"
+            app:destination="@+id/followsFragment" />
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+    <action android:id="@+id/action_global_userFragment" app:destination="@id/userFragment" />
 </navigation>

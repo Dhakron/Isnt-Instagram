@@ -1,4 +1,4 @@
-package net.abrudan.isntinstagram.views.main.ui.search
+package net.abrudan.isntinstagram.views.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import net.abrudan.isntinstagram.R
+import net.abrudan.isntinstagram.viewModel.SearchViewModel
 
 
 class SearchFragment : Fragment() {
