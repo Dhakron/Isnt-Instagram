@@ -32,9 +32,11 @@ private const val REQUEST_CODE_STORAGE = 100
 
 class CameraFR : Fragment() {
     private var lensFacing = CameraX.LensFacing.FRONT
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_camera_fr, container, false)
@@ -42,6 +44,7 @@ class CameraFR : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
         viewFinder.post { startCamera() }
         viewFinder.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _->
             updateTransform()
