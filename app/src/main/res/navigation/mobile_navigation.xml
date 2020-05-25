@@ -3,61 +3,198 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/startFragment">
 
+    <fragment
+        android:id="@+id/logInFR"
+        android:name="net.abrudan.isntinstagram.views.login.LogInFR"
+        android:label="fragment_log_in_fr"
+        tools:layout="@layout/fragment_log_in_fr">
+        <action
+            android:id="@+id/action_logInFR_to_registerFR1"
+            app:destination="@id/registerFR1" />
+        <action
+            android:id="@+id/action_logInFR_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/logInFR"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_logInFR_to_registerFR3"
+            app:destination="@id/registerFR3"
+            app:popUpTo="@id/logInFR"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFR1"
+        android:name="net.abrudan.isntinstagram.views.login.registerFR.RegisterFR1"
+        android:label="fragment_register_fr1"
+        tools:layout="@layout/fragment_register_fr1">
+        <action
+            android:id="@+id/action_registerFR1_to_registerFR2"
+            app:destination="@id/registerFR2" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFR2"
+        android:name="net.abrudan.isntinstagram.views.login.registerFR.RegisterFR2"
+        android:label="fragment_register_fr2"
+        tools:layout="@layout/fragment_register_fr2">
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_registerFR2_to_registerFR3"
+            app:destination="@id/registerFR3"
+            app:popUpTo="@id/logInFR"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFR3"
+        android:name="net.abrudan.isntinstagram.views.login.registerFR.RegisterFR3"
+        android:label="fragment_register_fr3"
+        tools:layout="@layout/fragment_register_fr3">
+        <action
+            android:id="@+id/action_registerFR3_to_registerFR4"
+            app:destination="@id/registerFR4" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFR4"
+        android:name="net.abrudan.isntinstagram.views.login.registerFR.RegisterFR4"
+        android:label="fragment_register_fr4"
+        tools:layout="@layout/fragment_register_fr4" >
+        <action
+            android:id="@+id/action_registerFR4_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/logInFR"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_home"
         android:name="net.abrudan.isntinstagram.views.main.home.HomeFragment"
-        android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="net.abrudan.isntinstagram.views.main.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_postcontent"
+        android:name="net.abrudan.isntinstagram.views.main.addPost.AddPostFragment"
+        />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_activity"
         android:name="net.abrudan.isntinstagram.views.main.NotificationsFragment"
-        android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_user"
-        android:name="net.abrudan.isntinstagram.views.main.user.MyUserFragment"
-        android:label="@string/title_user">
+        android:name="net.abrudan.isntinstagram.views.main.user.MyUserFragment">
         <action
             android:id="@+id/action_navigation_user_to_followsFragment"
             app:destination="@id/followsFragment" />
+        <action
+            android:id="@+id/action_navigation_user_to_editUserFragment"
+            app:destination="@id/editUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"
-        android:name="net.abrudan.isntinstagram.views.main.SearchFragment"
-        android:label="@string/title_search"
+        android:name="net.abrudan.isntinstagram.views.main.search.SearchFragment"
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/followsFragment"
-        android:name="net.abrudan.isntinstagram.views.main.FollowsFragment"
+        android:name="net.abrudan.isntinstagram.views.main.user.FollowsFragment"
         android:label="fragment_follows"
         tools:layout="@layout/fragment_follows" >
         <argument
-            android:name="followers"
-            app:argType="boolean"
-            android:defaultValue="true" />
-        <argument
             android:name="uid"
             app:argType="string" />
+        <argument
+            android:name="followers"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/userFragment"
         android:name="net.abrudan.isntinstagram.views.main.user.UserFragment"
         android:label="UserFragment" >
-        <action
-            android:id="@+id/action_userFragment_to_followsFragment2"
-            app:destination="@+id/followsFragment" />
         <argument
             android:name="uid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_userFragment_to_followsFragment"
+            app:destination="@id/followsFragment" />
     </fragment>
     <action android:id="@+id/action_global_userFragment" app:destination="@id/userFragment" />
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="net.abrudan.isntinstagram.views.main.addPost.GalleryFragment"
+        android:label="fragment_gallery"
+        tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/uploadPostFragment"
+        android:name="net.abrudan.isntinstagram.views.main.addPost.UploadPostFragment"
+        android:label="fragment_upload_post"
+        tools:layout="@layout/fragment_upload_post" >
+        <argument
+            android:name="imageList"
+            app:argType="net.abrudan.isntinstagram.model.MediaPost[]" />
+    </fragment>
+    <action android:id="@+id/action_global_uploadPostFragment" app:destination="@id/uploadPostFragment" />
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="net.abrudan.isntinstagram.views.main.addPost.PhotoFragment"
+        android:label="fragment_photo"
+        tools:layout="@layout/fragment_photo" >
+        <argument android:name="forProfileImage"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_photoFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/photoFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="net.abrudan.isntinstagram.views.main.addPost.VideoFragment"
+        android:label="fragment_video"
+        tools:layout="@layout/fragment_video" />
+    <action android:id="@+id/action_global_navigation_user" app:destination="@id/navigation_user" />
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="net.abrudan.isntinstagram.views.main.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_logInFR"
+            app:destination="@id/logInFR"
+            app:popUpTo="@id/startFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_startFragment_to_registerFR3"
+            app:destination="@id/registerFR3" />
+        <action
+            android:id="@+id/action_startFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/startFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <action android:id="@+id/action_global_photoFragment" app:destination="@id/photoFragment" />
+    <action
+        android:id="@+id/action_global_loginNavigation2"
+        app:destination="@id/mobile_navigation" />
+    <action
+        android:id="@+id/action_global_navigation_home"
+        app:destination="@id/navigation_home"
+        app:popUpTo="@id/logInFR"
+        app:popUpToInclusive="true" />
+    <action android:id="@+id/action_global_logInFR" app:destination="@id/logInFR" />
+    <action
+        android:id="@+id/action_global_startFragment"
+        app:destination="@id/startFragment"
+        app:popUpTo="@id/navigation_home"
+        app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/editUserFragment"
+        android:name="net.abrudan.isntinstagram.views.main.user.EditUserFragment"
+        android:label="fragment_edit_user"
+        tools:layout="@layout/fragment_edit_user" />
+    <fragment
+        android:id="@+id/followsTabItemFragment"
+        android:name="net.abrudan.isntinstagram.views.main.user.FollowsTabItemFragment"
+        android:label="fragment_follows_tab_item"
+        tools:layout="@layout/fragment_follows_tab_item" />
 </navigation>

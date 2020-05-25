@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".views.login.registerFR.RegisterFR4">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,37 +14,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ADD PROFILE PHOTO" />
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_cameraicon"
+                app:srcCompat="@drawable/ic_camerabutton" />
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADD a profile photo for ur frinds" />
+                android:text="@string/info_setPhot" />
 
             <Button
                 android:id="@+id/btnAdd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:text="ADD a photo" />
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ic_defaultbtn"
+                android:text="@string/btn_add_photo"
+                android:textColor="@color/colorPrimary" />
 
             <Button
                 android:id="@+id/btnSkip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:text="SKIP" />
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ic_defaultbtn"
+                android:text="@string/btn_skip"
+                android:textColor="@color/colorPrimary" />
 
         </LinearLayout>
 

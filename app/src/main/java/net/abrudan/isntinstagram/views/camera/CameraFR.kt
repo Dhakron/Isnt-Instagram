@@ -1,8 +1,8 @@
 package net.abrudan.isntinstagram.views.camera
 import android.Manifest
 import android.app.Activity
+import android.content.ContentUris
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
@@ -14,21 +14,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.camera.core.*
-import androidx.core.content.FileProvider
-import androidx.core.graphics.createBitmap
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_camera_fr.*
-import kotlinx.android.synthetic.main.fragment_register_fr1.*
 import net.abrudan.isntinstagram.R
-import net.abrudan.isntinstagram.views.login.registerFR.RegisterFR1
-import net.abrudan.isntinstagram.views.login.registerFR.RegisterFR2
+import net.abrudan.isntinstagram.model.MediaPost
 import java.io.File
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 private const val REQUEST_CODE_STORAGE = 100
-
 
 class CameraFR : Fragment() {
     private var lensFacing = CameraX.LensFacing.FRONT
