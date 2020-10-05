@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_row_media_item_view.view.*
 import net.abrudan.isntinstagram.model.Post
@@ -93,7 +94,8 @@ class AdapterPostImageItem(val context: Context, val layout:Int, saveViewPagerPo
             var width=context.displayMetrics.widthPixels
             var height=(width/4)*3
             itemView.ivMedia2.layoutParams= LinearLayout.LayoutParams(width,height)
-            Picasso.get().load(dataItem).into(itemView.ivMedia2)
+            //Picasso.get().load(dataItem).into(itemView.ivMedia2)
+            itemView.ivMedia2.load(dataItem)
         }
     }
 }

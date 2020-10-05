@@ -13,10 +13,14 @@ import androidx.core.content.res.TypedArrayUtils.getString
 import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import coil.api.load
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.row_post.view.*
@@ -76,7 +80,8 @@ class HomeAdapter(val context:Context,val layout:Int,saveViewPagerPosition: Save
                 )
             }
             dataItem.adapter!!.setItems(dataItem.mediaUri!!.toList())
-            Picasso.get().load(dataItem.thumbUri).placeholder(R.drawable.ic_userdefault).into(itemView.ivThumb)
+            //Picasso.get().load(dataItem.thumbUri).placeholder(R.drawable.ic_userdefault).into(itemView.ivThumb)
+            itemView.ivThumb.load(dataItem.thumbUri)
             itemView.vpMedia.adapter = dataItem.adapter
             if (dataItem.media!!.size > 1) {
                 TabLayoutMediator(itemView.tab_layout, itemView.vpMedia)
@@ -137,12 +142,19 @@ class HomeAdapter(val context:Context,val layout:Int,saveViewPagerPosition: Save
             itemView.tvUserName.setOnClickListener{
                 listener.onClick(dataItem.uid!!)
             }
+            itemView.ivComment.setOnClickListener {
+                var postRef="UsersData/"+dataItem.uid+"/Posts/"+dataItem.originalId
+                listener.viewComments(postRef)
             }
+        }
     }
     interface HomeAdapterInterface {
         fun likePost(view:View,data:Post) {
         }
         fun onClick(uid:String){
+        }
+        fun viewComments(postRef:String){
+
         }
         fun onclickDelete(data: Post){
 

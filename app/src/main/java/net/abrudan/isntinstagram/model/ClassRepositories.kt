@@ -32,18 +32,12 @@ class Repositories {
         return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
             .limit(10).get()
     }
-    suspend fun getPostSync():QuerySnapshot? {
-        return try {
-            val ref = "UsersData/" + user.uid.toString() + "/FollowingPosts"
-            return db.collection(ref).orderBy("date",Query.Direction.DESCENDING).limit(10).get().await()
-        }catch(e:Exception) {
-            return null
-        }
-    }
+
     fun getAllUserInfo():Task<QuerySnapshot>{
         val ref="UsersInfo"
         return db.collection(ref).orderBy("date",Query.Direction.DESCENDING).limit(30).get()
     }
+
     fun getAllUserInfoFrom(doc:DocumentSnapshot):Task<QuerySnapshot>{
         val ref="UsersInfo"
         return db.collection(ref).orderBy("date",Query.Direction.DESCENDING).startAfter(doc).limit(30).get()
@@ -53,16 +47,6 @@ class Repositories {
         return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
             .startAfter(document)
             .limit(10).get()
-    }
-    suspend fun getPostFromSync(document: DocumentSnapshot):QuerySnapshot? {
-        return try {
-            val ref = "UsersData/" + user.uid.toString() + "/FollowingPosts"
-            return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
-                .startAfter(document)
-                .limit(10).get().await()
-        }catch(e:Exception) {
-            return null
-        }
     }
     fun getPost(ref:String,docID:String): Task<DocumentSnapshot> {
         return db.collection(ref).document(docID).get()
@@ -211,13 +195,6 @@ class Repositories {
     fun getUrl(path:String): Task<Uri> {
         return storage.reference.child(path).downloadUrl
     }
-    suspend fun getUrlSync(path:String):Uri? {
-        return try {
-            return storage.reference.child(path).downloadUrl.await()
-        }catch(e:Exception) {
-            return null
-        }
-    }
     fun uploadImageProfile(image:Bitmap):UploadTask{
         storage.reference.child(user.currentUser!!.uid+"/profileImage.jpg")
         val refPath=user.currentUser?.uid+"/profileImage.jpg"
@@ -228,5 +205,76 @@ class Repositories {
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
         return storage?.reference?.child(refPath)?.putBytes(data,metadata)
+    }
+    fun addComment(comment:String,postRef:String, replyTo:String?):Task<HttpsCallableResult>{
+        val data = hashMapOf(
+            "comment" to comment,
+            "postRef" to postRef,
+            "replyTo" to replyTo
+        )
+        return functions.getHttpsCallable("addComment")
+            .call(data)
+            .continueWith { task ->
+                return@continueWith task.result
+            }
+    }
+    fun deleteComment(commentRef:String):Task<HttpsCallableResult>{
+        val data= hashMapOf(
+            "commentRef" to commentRef
+        )
+        return functions.getHttpsCallable("deleteComment").call(data)
+            .continueWith { task->
+                return@continueWith task.result
+            }
+    }
+    fun likeComment(commentRef:String): Task<HttpsCallableResult> {
+        val data = hashMapOf(
+            "commentRef" to commentRef
+        )
+        return functions.getHttpsCallable("addLikeToComment")
+            .call(data)
+            .continueWith { task ->
+                return@continueWith task.result
+            }
+    }
+    fun unlikeComment(commentRef:String): Task<HttpsCallableResult> {
+        val data = hashMapOf(
+            "commentRef" to commentRef
+        )
+        return functions.getHttpsCallable("deleteLikeToComment")
+            .call(data)
+            .continueWith { task ->
+                return@continueWith task.result
+            }
+    }
+    fun getComments(postRef:String): Task<QuerySnapshot> {
+        val ref = postRef + "/Comments"
+        return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
+            .limit(30).get()
+    }
+    fun getCommentsFrom(postRef: String,document:DocumentSnapshot): Task<QuerySnapshot> {
+        val ref = postRef + "/Comments"
+        return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
+            .startAfter(document)
+            .limit(30).get()
+    }
+    fun getReplies(commentRef:String): Task<QuerySnapshot> {
+        val ref = "$commentRef/Replies"
+        return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
+            .limit(3).get()
+    }
+    fun getRepliesFrom(commentRef: String,document:DocumentSnapshot): Task<QuerySnapshot> {
+        val ref = "$commentRef/Replies"
+        return db.collection(ref).orderBy("date", Query.Direction.DESCENDING)
+            .startAfter(document)
+            .limit(3).get()
+    }
+    fun getLikeComment(commentRef: String,myUID:String):Task<DocumentSnapshot>{
+        val ref= "$commentRef/Likes/"
+        return db.collection(ref).document(myUID).get()
+    }
+    fun getLikeCommentReply(commentRef: String,replyId: String,myUID:String):Task<DocumentSnapshot>{
+        val ref= "$commentRef/Replies/$replyId/Likes/"
+        return db.collection(ref).document(myUID).get()
     }
 }

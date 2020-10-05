@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import coil.Coil
+import coil.api.load
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
@@ -46,7 +48,8 @@ class FollowsAdapter(val context:Context, val layout:Int, val listener:FollowsAd
     class ViewHolder(viewlayout: View, val context: Context) : RecyclerView.ViewHolder(viewlayout) {
         private val currentUser=FirebaseAuth.getInstance().currentUser
         fun bind(dataItem: UserInfo,listener:FollowsAdapterInterface){
-            Picasso.get().load(dataItem.profileImgURI).placeholder(R.drawable.ic_userdefault).into(itemView.ivThumb)
+            //Picasso.get().load(dataItem.profileImgURI).placeholder(R.drawable.ic_userdefault).into(itemView.ivThumb)
+            itemView.ivThumb.load(dataItem.profileImgURI)
             itemView.tvUserID.text=dataItem.userID
             itemView.tvName.text=dataItem.name
             if(currentUser!!.uid != dataItem.userUID){

@@ -4,15 +4,15 @@ import android.app.Application
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.model.value.IntegerValue
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import net.abrudan.isntinstagram.model.*
 import org.jetbrains.anko.doAsync
+import java.lang.Exception
 
 class UserViewModel : ViewModel() {
     private val TAG = "User-View-Model"
@@ -77,6 +77,7 @@ class UserViewModel : ViewModel() {
     fun getAllPosts():MutableLiveData<List<Post?>>{
         return postList
     }
+
     fun loadAllPosts(uid:String){
         loadingData=true
         repository.getUserPosts(uid).addOnCompleteListener {documents->
@@ -136,6 +137,57 @@ class UserViewModel : ViewModel() {
             Log.e(TAG,"Error consiguiendo POSTS")
         }
     }
+    fun loadAllPostsSync(uid:String){
+        viewModelScope.launch {
+                loadingData=true
+                val documents= withContext(Dispatchers.IO){repository.getUserPosts(uid).await()}
+                var listJobs= mutableListOf<Deferred<Boolean>>()
+                var list = mutableListOf<Post>()
+                documents.documents?.map{
+                    listJobs.add(async {
+                        var temPost = it.toObject(Post::class.java)
+                        temPost?.liked = it.getBoolean("liked")
+                        temPost?.id=it.id
+                        temPost?.originalId=it.id
+                        temPost?.mediaUri = MutableList(temPost?.media?.size!!) { "".toUri() }
+                        try {
+                            temPost?.thumbUri = withContext(Dispatchers.IO){repository.getUrl(temPost?.thumb!!).await()}
+                        }catch (e: Exception){
+                            temPost?.thumbUri = null
+                        }
+                        try {
+                            var like =
+                                withContext(Dispatchers.IO){repository.getLike(temPost.uid!!,temPost.originalId!!,auth.currentUser!!.uid)
+                                    .await()}
+                            if (like.exists()) temPost.liked = true
+                        }catch (e:Exception){
+                            temPost.liked = false
+                        }
+                        var listMediaJobs = mutableListOf<Deferred<Unit>>()
+                        temPost?.media?.map { path ->
+                            listMediaJobs.add(async(Dispatchers.IO){
+                                var position = temPost.media?.lastIndexOf(path)
+                                try {
+                                    temPost.mediaUri[position!!] = withContext(Dispatchers.IO){repository.getUrl(path).await()}
+                                }catch (e: Exception){
+                                    temPost.mediaUri[position!!] = "".toUri()
+                                }
+                            })
+                        }
+                        listMediaJobs.awaitAll()
+                        list.add(temPost)
+                    })
+                }
+                listJobs.awaitAll()
+                if(documents.documents.size>0){
+                    lastPost=documents.documents?.last()
+                    postList.value=list
+                    loadingData=false
+                }else{
+                    postList.value = emptyList<Post?>().toMutableList()
+                }
+            }
+    }
     fun loadingData():Boolean{
         return loadingData
     }
@@ -183,6 +235,58 @@ class UserViewModel : ViewModel() {
         }.addOnFailureListener{
             Log.e(TAG,"Error consiguiendo POSTS")
         }
+    }
+    fun loadAllPostsFromLastSync(uid:String){
+        viewModelScope.launch {
+                if(loadingData||lastPost==null)return@launch
+                loadingData=true
+                val documents= withContext(Dispatchers.IO){repository.getUserPostsFrom(uid,lastPost!!).await()}
+                var listJobs= mutableListOf<Deferred<Boolean>>()
+                var list = postList.value!!.toMutableList()
+                documents.documents?.map{
+                    listJobs.add(async {
+                        var temPost = it.toObject(Post::class.java)
+                        temPost?.liked = it.getBoolean("liked")
+                        temPost?.id=it.id
+                        temPost?.originalId=it.id
+                        temPost?.mediaUri = MutableList(temPost?.media?.size!!) { "".toUri() }
+                        try {
+                            temPost?.thumbUri = withContext(Dispatchers.IO){repository.getUrl(temPost?.thumb!!).await()}
+                        }catch (e: Exception){
+                            temPost?.thumbUri = null
+                        }
+                        try {
+                            var like =
+                                withContext(Dispatchers.IO){repository.getLike(temPost.uid!!,temPost.originalId!!,auth.currentUser!!.uid)
+                                    .await()}
+                            if (like.exists()) temPost.liked = true
+                        }catch (e:Exception){
+                            temPost.liked = false
+                        }
+                        var listMediaJobs = mutableListOf<Deferred<Unit>>()
+                        temPost?.media?.map { path ->
+                            listMediaJobs.add(async(Dispatchers.IO){
+                                var position = temPost.media?.lastIndexOf(path)
+                                try {
+                                    temPost.mediaUri[position!!] = withContext(Dispatchers.IO){repository.getUrl(path).await()}
+                                }catch (e: Exception){
+                                    temPost.mediaUri[position!!] = "".toUri()
+                                }
+                            })
+                        }
+                        listMediaJobs.awaitAll()
+                        list!!.add(temPost)
+                    })
+                }
+                listJobs.awaitAll()
+                if(documents.documents.size>0){
+                    lastPost=documents.documents?.last()
+                    postList.value=list
+                    loadingData=false
+                }else{
+                    postList.value = postList.value
+                }
+            }
     }
 
     fun likePost(post:Post){

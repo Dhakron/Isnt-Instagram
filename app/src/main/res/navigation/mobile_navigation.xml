@@ -197,4 +197,13 @@
         android:name="net.abrudan.isntinstagram.views.main.user.FollowsTabItemFragment"
         android:label="fragment_follows_tab_item"
         tools:layout="@layout/fragment_follows_tab_item" />
+    <fragment
+        android:id="@+id/commentsFragment"
+        android:name="net.abrudan.isntinstagram.views.main.CommentsFragment"
+        android:label="CommentsFragment" >
+        <argument
+            android:name="postRef"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment><action android:id="@+id/action_global_commentsFragment" app:destination="@id/commentsFragment"/>
 </navigation>

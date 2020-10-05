@@ -40,19 +40,30 @@ class FollowsTabItemFragment : Fragment(),FollowsAdapter.FollowsAdapterInterface
         uid = arguments?.getString("uid")
         followsViewModel = ViewModelProvider(this).get(FollowsViewModel::class.java)
         if(followers!!){
-            followsViewModel.loadAllFollowers(uid!!)
-            followsViewModel.getAllFollowers().observe(this, Observer { followsView->
+            followsViewModel.getAllFollowers().removeObservers(viewLifecycleOwner)
+            followsViewModel.getAllFollowers().observe(viewLifecycleOwner, Observer { followsView->
                 followsView?.let {
                     adapter.setFollows(it.sortedBy { it!!.userID })
                     progressBar.visibility=View.GONE
                 } })
+            followsViewModel.loadAllFollowersSync(uid!!)
         }else{
-            followsViewModel.loadAllFollowing(uid!!)
-            followsViewModel.getAllFollowing().observe(this, Observer { followsView->
+            followsViewModel.getAllFollowing().removeObservers(viewLifecycleOwner)
+            followsViewModel.getAllFollowing().observe(viewLifecycleOwner, Observer { followsView->
                 followsView?.let {
                     adapter.setFollows(it.sortedBy { it!!.userID })
                     progressBar.visibility=View.GONE
                 } })
+            followsViewModel.loadAllFollowingSync(uid!!)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(followers!!){
+            followsViewModel.getAllFollowers().removeObservers(this)
+        }else{
+            followsViewModel.getAllFollowing().removeObservers(this)
         }
     }
     private fun initRV() {
@@ -70,9 +81,9 @@ class FollowsTabItemFragment : Fragment(),FollowsAdapter.FollowsAdapterInterface
                         (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                         >= recyclerView.layoutManager?.itemCount!! - 1) {
                         if(followers!!){
-                            followsViewModel.loadAllFollowersFrom(uid?:"")
+                            followsViewModel.loadAllFollowersFromSync(uid?:"")
                         }else{
-                            followsViewModel.loadAllFollowingFrom(uid?:"")
+                            followsViewModel.loadAllFollowingFromSync(uid?:"")
                         }
                         progressBar.visibility=View.VISIBLE
                     }

@@ -35,6 +35,10 @@
     <string name="tv_likes">Me Gusta</string>
     <string name="tv_comments">Comentarios</string>
     <string name="tv_datePost_front">Hace </string>
+    <string name="tv_datePost_end_years"> años</string>
+    <string name="tv_datePost_end_year"> año</string>
+    <string name="tv_datePost_end_months"> meses</string>
+    <string name="tv_datePost_end_month"> mes</string>
     <string name="tv_datePost_end_days"> dias</string>
     <string name="tv_datePost_end_day"> dia</string>
     <string name="tv_datePost_end_hours"> horas</string>
@@ -42,6 +46,14 @@
     <string name="tv_datePost_end_minutes"> minutos</string>
     <string name="tv_datePost_end_minute"> minuto</string>
     <string name="tv_datePost_end_seconds"> segundos</string>
+    <string name="tv_datePost_end_years_comment"> años</string>
+    <string name="tv_datePost_end_year_comment"> año</string>
+    <string name="tv_datePost_end_months_comment"> meses</string>
+    <string name="tv_datePost_end_month_comment"> mes</string>
+    <string name="tv_datePost_end_days_comment"> d</string>
+    <string name="tv_datePost_end_hours_comment"> h</string>
+    <string name="tv_datePost_end_minutes_comment"> min</string>
+    <string name="tv_datePost_end_seconds_comment"> sec</string>
     <string name="tv_post">Publicaciones</string>
     <string name="tv_followers">Seguidores</string>
     <string name="tv_following">Siguiendo</string>
@@ -62,6 +74,16 @@
     <string name="tv_new_user">Nuevos usuarios</string>
     <string name="alert_delete_post">¿Estas seguro de que quieres borrar esta publicación?</string>
     <string name="alert">¡Cuidado!</string>
+    <string name="tv_reply">Responder</string>
+    <string name="tv_like">Me gusta</string>
+    <string name="tv_front_show_replies">──    Ver</string>
+    <string name="tv_end_show_replies">respuestas</string>
+    <string name="tv_front_show_previous_replies">──    Ver </string>
+    <string name="tv_end_show_previous_replies">respuestas anteriores </string>
+    <string name="tv_loading_replies">──    Cargando...</string>
+    <string name="hint_add_comment">Añadir un comentario...</string>
+    <string name="tv_to_post">Publicar</string>
+    <string name="tv_reply_to">Respondiendo a</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

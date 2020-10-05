@@ -26,6 +26,7 @@ import net.abrudan.isntinstagram.model.Post
 import net.abrudan.isntinstagram.util.SaveViewPagerPosition
 import net.abrudan.isntinstagram.viewModel.GlobalViewModel
 import net.abrudan.isntinstagram.viewModel.UserViewModel
+import net.abrudan.isntinstagram.views.main.home.HomeFragmentDirections
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
@@ -52,7 +53,7 @@ class MyUserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
         uid=arguments?.getString("uid")?:userViewModel.getUID()
         globalViewModel= ViewModelProvider(activity!!).get(GlobalViewModel::class.java)
         globalViewModel.loadMyuserData()
-        userViewModel.loadAllPosts(uid)
+        userViewModel.loadAllPostsSync(uid)
         userViewModel.getUserData(uid).observe(this, Observer { user->
             user?.let {
                 Picasso.get().load(it.profileImgURI).placeholder(R.drawable.ic_userdefault).into(ivThumb)
@@ -66,13 +67,12 @@ class MyUserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
         })
         userViewModel.getAllPosts().observe(this, Observer { postView->
             postView?.let {
-                Log.e("myusdiiid",it.toString())
                 adapter.setPost(it.sortedBy { it!!.date }.reversed())
                 srLayout.isRefreshing=false
                 progressBar.visibility=View.GONE
             } })
         srLayout.setOnRefreshListener {
-            userViewModel.loadAllPosts(uid)
+            userViewModel.loadAllPostsSync(uid)
         }
         llFollowers.setOnClickListener {
             findNavController().navigate(MyUserFragmentDirections.actionNavigationUserToFollowsFragment(uid,true))
@@ -104,7 +104,7 @@ class MyUserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
                     if (!userViewModel.loadingData()&&dy>0&&recyclerView.layoutManager?.childCount!! +
                         (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                         >= recyclerView.layoutManager?.itemCount!! - 1) {
-                        userViewModel.loadAllPostsFromLast(uid)
+                        userViewModel.loadAllPostsFromLastSync(uid)
                         progressBar.visibility=View.VISIBLE
                     }
                 }
@@ -134,5 +134,9 @@ class MyUserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
             noButton { }
         }.show()
         super.onclickDelete(data)
+    }
+    override fun viewComments(postRef:String) {
+        findNavController().navigate(HomeFragmentDirections.actionGlobalCommentsFragment(postRef))
+        super.viewComments(postRef)
     }
 }

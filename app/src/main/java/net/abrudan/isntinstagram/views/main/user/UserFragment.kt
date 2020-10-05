@@ -7,19 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_my_user.llFollowers
-import kotlinx.android.synthetic.main.fragment_my_user.llFollowing
-import kotlinx.android.synthetic.main.fragment_my_user.tvNumFollowers
-import kotlinx.android.synthetic.main.fragment_my_user.tvNumFollowing
-import kotlinx.android.synthetic.main.fragment_my_user.tvNumPosts
-import kotlinx.android.synthetic.main.fragment_my_user.tvUserName
-import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.progressBar
 
@@ -27,8 +18,8 @@ import net.abrudan.isntinstagram.R
 import net.abrudan.isntinstagram.adapters.HomeAdapter
 import net.abrudan.isntinstagram.model.Post
 import net.abrudan.isntinstagram.util.SaveViewPagerPosition
-import net.abrudan.isntinstagram.viewModel.GlobalViewModel
 import net.abrudan.isntinstagram.viewModel.UserViewModel
+import net.abrudan.isntinstagram.views.main.home.HomeFragmentDirections
 
 class UserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
     private val userViewModel: UserViewModel by lazy {
@@ -59,7 +50,7 @@ class UserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
                 btnFollow.setBackgroundResource(R.drawable.ic_defaultbtn)
             }
         })
-        userViewModel.loadAllPosts(uid)
+        userViewModel.loadAllPostsSync(uid)
         userViewModel.getUserData(uid).observe(this, Observer { user->
             user?.let {
                 Picasso.get().load(it.profileImgURI).placeholder(R.drawable.ic_userdefault).into(ivThumb)
@@ -78,7 +69,7 @@ class UserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
                 progressBar.visibility=View.GONE
             } })
         srLayout.setOnRefreshListener {
-            userViewModel.loadAllPosts(uid)
+            userViewModel.loadAllPostsSync(uid)
         }
         llFollowers.setOnClickListener {
             findNavController().navigate(UserFragmentDirections.actionUserFragmentToFollowsFragment(uid,true))
@@ -114,7 +105,7 @@ class UserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
                     if (!userViewModel.loadingData()&&dy>0&&recyclerView.layoutManager?.childCount!! +
                         (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                         >= recyclerView.layoutManager?.itemCount!! - 1) {
-                        userViewModel.loadAllPostsFromLast(uid)
+                        userViewModel.loadAllPostsFromLastSync(uid)
                         progressBar.visibility=View.VISIBLE
                     }
                 }
@@ -131,6 +122,11 @@ class UserFragment : Fragment(),HomeAdapter.HomeAdapterInterface {
         tempList.add(tempData)
         adapter.setPost(tempList.sortedBy { it!!.date }.reversed())
         userViewModel.likePost(data)
+    }
+
+    override fun viewComments(postRef:String) {
+        findNavController().navigate(HomeFragmentDirections.actionGlobalCommentsFragment(postRef))
+        super.viewComments(postRef)
     }
 
 }
