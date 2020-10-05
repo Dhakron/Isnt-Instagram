@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_register_fr2.*
@@ -15,8 +16,8 @@ import net.abrudan.isntinstagram.R
 import net.abrudan.isntinstagram.util.isPasswordValid
 import net.abrudan.isntinstagram.util.validatePassword
 import net.abrudan.isntinstagram.util.validateRePassword
+import org.jetbrains.anko.support.v4.find
 
-private const val ARG_Email = "ARG_Email"
 class RegisterFR2 : Fragment() {
     private val auth=FirebaseAuth.getInstance()
     private var email: String? = null
@@ -30,13 +31,12 @@ class RegisterFR2 : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            email = it.getString(ARG_Email)
-            Log.e("error", "=================================================================")
-            Log.e("error", email)
+            email = it.getString("email")
         }
     }
     override fun onStart() {
         super.onStart()
+        progressBar.visibility=View.GONE
         btnNext.isEnabled=false
         password_field.doOnTextChanged { text, _, _, _ ->
             btnNext.isEnabled= validatePassword(text.toString(), textInputLayout, btnNext, this.context!!) && validateRePassword(text.toString(),password_field2.text.toString(), textInputLayout1, btnNext, this.context!!)
@@ -47,27 +47,20 @@ class RegisterFR2 : Fragment() {
         btnNext.setOnClickListener { onClickNext() }
     }
     private fun onClickNext(){
+        progressBar.visibility=View.VISIBLE
         //fields
         password_field.isEnabled=false
         password_field2.isEnabled=false
         //btns
         btnNext.isEnabled=false
         btnNext.text=""
-        Glide.with(this).load(R.drawable.load).into(ivLoad)
-        ivLoad.forceHasOverlappingRendering(true)
         auth.createUserWithEmailAndPassword(email?:"error", password_field2.text.toString())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    var transaction= parentFragmentManager.beginTransaction()
-                    val newFragment= RegisterFR3()
-                    transaction.replace(R.id.LogInFR, newFragment)
-                    transaction.commit()
+                    findNavController().navigate(RegisterFR2Directions.actionRegisterFR2ToRegisterFR3())
                 } else {
-                    Toast.makeText(context,"Ha ocurrido un error", Toast.LENGTH_SHORT).show()
-                    var transaction= parentFragmentManager.beginTransaction()
-                    val newFragment= RegisterFR1()
-                    transaction.replace(R.id.LogInFR, newFragment)
-                    transaction.commit()
+                    Toast.makeText(context,getString(R.string.err_register), Toast.LENGTH_SHORT).show()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
 

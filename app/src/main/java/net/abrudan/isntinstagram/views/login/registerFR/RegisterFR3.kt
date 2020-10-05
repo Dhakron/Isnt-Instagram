@@ -3,19 +3,24 @@ package net.abrudan.isntinstagram.views.login.registerFR
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.android.synthetic.main.fragment_register_fr3.*
 import net.abrudan.isntinstagram.R
-import net.abrudan.isntinstagram.model.UserRepositories
+import net.abrudan.isntinstagram.model.Repositories
+import net.abrudan.isntinstagram.util.DialogExitSetUserID
+import net.abrudan.isntinstagram.util.validateUserName
 
 
 class RegisterFR3 : Fragment() {
-    private lateinit var userRepositories: UserRepositories
+    private lateinit var userRepositories: Repositories
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,29 +30,44 @@ class RegisterFR3 : Fragment() {
     }
     override fun onStart() {
         super.onStart()
-        userRepositories= UserRepositories()
+        progressBar.visibility=View.GONE
+        userRepositories= Repositories()
         btnNext.setOnClickListener{onClickNext()}
+        userName_field.doOnTextChanged { text, _, _, _ ->
+            btnNext.isEnabled= validateUserName(text.toString(), userNameInputLayout, btnNext, this.context!!)
+        }
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fm: FragmentManager = requireActivity().supportFragmentManager
+                var s= DialogExitSetUserID()
+                DialogExitSetUserID().show(fm,"")
+
+
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun onClickNext(){
-        Log.e("alex","_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-")
+        progressBar.visibility=View.VISIBLE
+        btnNext.isEnabled=false
+        btnNext.text=""
+        userName_field.isEnabled=false
         userRepositories.setUserID(userName_field.text.toString()).addOnCompleteListener { task ->
             if(task.isSuccessful){
-                var transaction= parentFragmentManager.beginTransaction()
-                val newFragment= RegisterFR4()
-                transaction.replace(R.id.LogInFR, newFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+                findNavController().navigate(RegisterFR3Directions.actionRegisterFR3ToRegisterFR4())
             }else{
-                Toast.makeText(context,"Ya existe!",Toast.LENGTH_SHORT).show()
+                userName_field.isEnabled=true
+                btnNext.isEnabled=false
+                progressBar.visibility=View.GONE
+                btnNext.text=getString(R.string.btn_next)
+                userNameInputLayout.error=getString(R.string.err_msg_username_exist)
                 val e = task.exception
                 if (e is FirebaseFunctionsException) {
-                    Log.e("alex",e.code.toString())
-                    Log.e("alex",e.details.toString())
+                    Log.e("Error",e.code.toString())
+                    Log.e("Error",e.details.toString())
                 }
             }
         }
-
     }
-
 }

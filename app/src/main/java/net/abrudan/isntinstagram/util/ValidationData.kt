@@ -26,6 +26,23 @@ fun validateEmail(email: String, inputLayout: TextInputLayout, btn : Button, con
     }
     return true
 }
+fun validateUserName(user: String, inputLayout: TextInputLayout, btn : Button, context: Context): Boolean {
+    if(user.isEmpty()){
+        inputLayout.isErrorEnabled = false
+        btn.isEnabled=false
+    }else if (user.length<4) {
+        inputLayout.error = context.getString(R.string.err_msg_username_shortlength)
+        btn.isEnabled=false
+        return false
+    }else if(user.length>12){
+        inputLayout.error = context.getString(R.string.err_msg_username_longlength)
+        btn.isEnabled=false
+        return false
+    } else{
+        inputLayout.isErrorEnabled = false
+    }
+    return true
+}
 
 fun validatePassword(password: String, inputLayout: TextInputLayout, btn : Button, context: Context): Boolean {
     if(password.isEmpty()){

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".views.main.addPost.UploadPostFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_actionbar4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        app:contentInsetStart="0dp"
+        app:layout_scrollFlags="scroll">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_quit"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnPost"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="#00673AB7"
+                android:text="@string/btn_post"
+                android:textColor="@color/colorAccent"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.16000003">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vpImagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="350dp" />
+
+            <LinearLayout
+                android:id="@+id/llip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etTittlePost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/hint_tv_post"
+                    android:inputType="textMultiLine"
+                    android:maxLength="100"
+                    android:maxLines="4" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvImgCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout7"
+            app:layout_constraintVertical_bias="0.18" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
